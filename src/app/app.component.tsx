@@ -10,8 +10,7 @@ import {
 } from '@ui-kitten/components'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import * as eva from '@eva-design/eva'
-
-import { BOOK_API_KEY } from '../config/env'
+import { theme, mapping } from './app-theming'
 
 const HeartIcon = (
 	props?: Partial<ImageProps>
@@ -20,7 +19,10 @@ const HeartIcon = (
 export default (): React.ReactElement => (
 	<>
 		<IconRegistry icons={EvaIconsPack} />
-		<ApplicationProvider {...eva} theme={eva.dark}>
+		<ApplicationProvider
+			{...eva}
+			theme={{ ...eva.dark, ...theme }}
+			customMapping={mapping}>
 			<Layout style={styles.container}>
 				<Text style={styles.text} category="h1">
 					Welcome to UI Kitten 😻
@@ -31,11 +33,6 @@ export default (): React.ReactElement => (
 				<Text style={styles.text} appearance="hint">
 					For example, try changing theme to Dark by using eva.dark
 				</Text>
-
-				<Text style={styles.text} appearance="hint">
-					{BOOK_API_KEY}
-				</Text>
-
 				<Button style={styles.likeButton} accessoryLeft={HeartIcon}>
 					LIKE
 				</Button>
