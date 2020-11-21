@@ -11,13 +11,8 @@ import {
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import * as eva from '@eva-design/eva'
 
-// import {BOOK_API_KEY} from './config.js'
-import { BOOK_API_KEY } from './src/config/env'
+import { BOOK_API_KEY } from '../config/env'
 
-/**
- * Use any valid `name` property from eva icons (e.g `github`, or `heart-outline`)
- * https://akveo.github.io/eva-icons
- */
 const HeartIcon = (
 	props?: Partial<ImageProps>
 ): React.ReactElement<ImageProps> => <Icon {...props} name="heart" />
@@ -25,7 +20,7 @@ const HeartIcon = (
 export default (): React.ReactElement => (
 	<>
 		<IconRegistry icons={EvaIconsPack} />
-		<ApplicationProvider {...eva} theme={eva.light}>
+		<ApplicationProvider {...eva} theme={eva.dark}>
 			<Layout style={styles.container}>
 				<Text style={styles.text} category="h1">
 					Welcome to UI Kitten 😻
