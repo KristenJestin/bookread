@@ -12,3 +12,7 @@ export const ReadingIcon = (props: any): IconElement => (
 export const BooksIcon = (props: any): IconElement => (
 	<Icon {...props} name="book" />
 )
+
+export const SearchIcon = (props: any): IconElement => (
+	<Icon {...props} name="search" />
+)
