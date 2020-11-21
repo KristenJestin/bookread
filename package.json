@@ -5,7 +5,7 @@
 		"name": "KristenJestin"
 	},
 	"scripts": {
-		"android": "npx react-native run-android",
+		"android": "react-native run-android",
 		"ios": "react-native run-ios",
 		"start": "react-native start",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",

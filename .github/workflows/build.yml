@@ -22,11 +22,10 @@ jobs:
                   npm install
             - name: Gradlew permissions
               run: |
-                  cd android  
-                  chmod +x ./gradlew
+                  cd android && chmod +x ./gradlew
             - name: Build Android Release
               run: |
-                  cd android && ./gradlew assembleRelease
+                  cd android && ./gradlew assembleRelease -x bundleReleaseJsAndAssets
             - name: Upload Artifact
               uses: actions/upload-artifact@v1
               with:
