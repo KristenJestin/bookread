@@ -63,4 +63,4 @@ buck-out/
 /ios/Pods/
 
 # Custom
-.env
+/src/config/env.ts

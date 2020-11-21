@@ -11,6 +11,9 @@ import {
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import * as eva from '@eva-design/eva'
 
+// import {BOOK_API_KEY} from './config.js'
+import { BOOK_API_KEY } from './src/config/env'
+
 /**
  * Use any valid `name` property from eva icons (e.g `github`, or `heart-outline`)
  * https://akveo.github.io/eva-icons
@@ -33,6 +36,11 @@ export default (): React.ReactElement => (
 				<Text style={styles.text} appearance="hint">
 					For example, try changing theme to Dark by using eva.dark
 				</Text>
+
+				<Text style={styles.text} appearance="hint">
+					{BOOK_API_KEY}
+				</Text>
+
 				<Button style={styles.likeButton} accessoryLeft={HeartIcon}>
 					LIKE
 				</Button>
