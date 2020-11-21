@@ -62,5 +62,5 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-# Jest
-/.jest
+# Custom
+.env
