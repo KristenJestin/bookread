@@ -39,7 +39,7 @@ export const searchBooks = async (query: string): Promise<BookProps[]> => {
 			title: info.title,
 			authors: info.authors,
 			publisher: info.publisher,
-			publishedDate: new Date(info.publishedDate),
+			publishedDate: info.publishedDate,
 			description: info.description,
 			identifiers: info.industryIdentifiers,
 			pageCount: info.pageCount,

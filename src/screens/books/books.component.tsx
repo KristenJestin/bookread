@@ -11,12 +11,15 @@ import { Toolbar } from '../../components/toolbar.component'
 import { SearchIcon } from '../../assets/icons'
 import { searchBooks } from '../../services/books.service'
 import { BookProps } from '../../data/book.helper'
-import { BookLayout } from '../../components/book.component'
+import { BookItemLayout } from '../../components/book-item.component'
+import { AppRoute } from '../../navigation/app-routes'
+import { BooksScreenProps } from '../../navigation/books.navigator'
 
-export const BooksScreen = (): LayoutElement => {
+export const BooksScreen = (props: BooksScreenProps): LayoutElement => {
 	const [books, setBooks] = React.useState<BookProps[]>([])
 	const [search, setSearch] = React.useState('')
 
+	// make request to get books from search
 	React.useEffect(() => {
 		;(async function () {
 			try {
@@ -30,6 +33,12 @@ export const BooksScreen = (): LayoutElement => {
 			}
 		})()
 	}, [search])
+
+	// navigate when click
+	const navigateBookDetails = (bookIndex: number): void => {
+		const { [bookIndex]: book } = books
+		props.navigation.navigate(AppRoute.BOOK_DETAILS, { book })
+	}
 
 	return (
 		<React.Fragment>
@@ -56,7 +65,12 @@ export const BooksScreen = (): LayoutElement => {
 					style={styles.list}
 					data={books}
 					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => <BookLayout book={item} />}
+					renderItem={({ item, index }) => (
+						<BookItemLayout
+							book={item}
+							navigate={() => navigateBookDetails(index)}
+						/>
+					)}
 				/>
 			</Layout>
 		</React.Fragment>

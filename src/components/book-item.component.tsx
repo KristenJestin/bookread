@@ -13,9 +13,10 @@ import { GoIcon } from '../assets/icons'
 
 interface BookLayoutProps extends LayoutProps {
 	book: BookProps
+	navigate: () => any
 }
 
-export const BookLayout = (props: BookLayoutProps): LayoutElement => {
+export const BookItemLayout = (props: BookLayoutProps): LayoutElement => {
 	const { book } = props
 
 	// get image
@@ -55,7 +56,7 @@ export const BookLayout = (props: BookLayoutProps): LayoutElement => {
 					)}
 					{book.publishedDate && (
 						<Text category="label" appearance="hint">
-							({book.publishedDate.getFullYear()})
+							({new Date(book.publishedDate).getFullYear()})
 						</Text>
 					)}
 					{book.description && (
@@ -72,6 +73,7 @@ export const BookLayout = (props: BookLayoutProps): LayoutElement => {
 					style={styles.button}
 					accessoryRight={GoIcon}
 					appearance="ghost"
+					onPress={() => props.navigate()}
 					size="small">
 					Afficher le livre
 				</Button>
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
 
 	image: {
 		height: 150,
-		aspectRatio: 1 / 1.5,
+		aspectRatio: 1 / 1.4,
 		backgroundColor: 'gray',
 		resizeMode: 'cover',
 		borderRadius: 12,

@@ -14,7 +14,7 @@ export type BookProps = {
 	title: string
 	authors: string[]
 	publisher: string
-	publishedDate: Date
+	publishedDate: string
 	description: string
 	identifiers: BookIdentifierProps[]
 	pageCount: number
