@@ -16,3 +16,7 @@ export const BooksIcon = (props: any): IconElement => (
 export const SearchIcon = (props: any): IconElement => (
 	<Icon {...props} name="search" />
 )
+
+export const GoIcon = (props: any): IconElement => (
+	<Icon {...props} name="chevron-right" />
+)

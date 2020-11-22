@@ -9,22 +9,23 @@ import {
 } from '@ui-kitten/components'
 import { Toolbar } from '../../components/toolbar.component'
 import { SearchIcon } from '../../assets/icons'
-import { searchBooks } from '../../services/books'
+import { searchBooks } from '../../services/books.service'
+import { BookProps } from '../../data/book.helper'
+import { BookLayout } from '../../components/book.component'
 
 export const BooksScreen = (): LayoutElement => {
-	const [books, setBooks] = React.useState([])
+	const [books, setBooks] = React.useState<BookProps[]>([])
 	const [search, setSearch] = React.useState('')
 
 	React.useEffect(() => {
 		;(async function () {
 			try {
-				const result = await searchBooks(search)
-				const values = await result.json()
-				setBooks(values?.items)
+				const searchedBooks = await searchBooks(search)
+				setBooks(searchedBooks)
 			} catch (error) {
 				Alert.alert(
 					'Erreur',
-					'Une erreur est survenue lors de la récupération des livres'
+					`Une erreur est survenue lors de la récupération des livres ${error}`
 				)
 			}
 		})()
@@ -52,13 +53,10 @@ export const BooksScreen = (): LayoutElement => {
 					Resultats
 				</Text>
 				<FlatList
+					style={styles.list}
 					data={books}
 					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => (
-						<Text style={{ marginBottom: 20 }}>
-							{item.volumeInfo.title}
-						</Text>
-					)}
+					renderItem={({ item }) => <BookLayout book={item} />}
 				/>
 			</Layout>
 		</React.Fragment>
@@ -78,5 +76,8 @@ const styles = StyleSheet.create({
 	headerText: {
 		textTransform: 'uppercase',
 		fontWeight: 'bold',
+	},
+	list: {
+		marginTop: 20,
 	},
 })
