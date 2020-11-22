@@ -7,7 +7,14 @@ import {
 	Alert,
 	FlatList,
 } from 'react-native'
-import { Divider, Layout, LayoutElement, Text } from '@ui-kitten/components'
+import {
+	Divider,
+	Layout,
+	LayoutElement,
+	Spinner,
+	Text,
+} from '@ui-kitten/components'
+import Axios from 'axios'
 import { BookProps } from '../../data/book.helper'
 import { BooksDetailsScreenProps } from '../../navigation/books.navigator'
 import { Toolbar } from '../../components/toolbar.component'
@@ -26,28 +33,35 @@ export const BookDetailsScreen = (
 	const [sameAuthorBooks, setSameAuthorBooks] = React.useState<BookProps[]>(
 		[]
 	)
+	const [loading, setLoading] = React.useState(false)
 
 	// make request to get books from author
 	React.useEffect(() => {
-		;(async function () {
+		const source = Axios.CancelToken.source()
+		;(async () => {
 			try {
-				if (book.authors && book.authors.length) {
-					const books = await searchBooksFromAuthor(book.authors[0])
-					setSameAuthorBooks(
-						books
-							.filter(
-								(sameBookAuthor) =>
-									sameBookAuthor.id !== book.id &&
-									sameBookAuthor.images &&
-									sameBookAuthor.images.length
-							)
-							.sort(
-								(a, b) =>
-									new Date(b.publishedDate).getTime() -
-									new Date(a.publishedDate).getTime()
-							)
-					)
-				}
+				if (!book.authors || !book.authors.length) return
+				if (!loading) setLoading(true)
+
+				const books = await searchBooksFromAuthor(
+					book.authors[0],
+					source
+				)
+				setSameAuthorBooks(
+					books
+						.filter(
+							(sameBookAuthor) =>
+								sameBookAuthor.id !== book.id &&
+								sameBookAuthor.images &&
+								sameBookAuthor.images.length
+						)
+						.sort(
+							(a, b) =>
+								new Date(b.publishedDate).getTime() -
+								new Date(a.publishedDate).getTime()
+						)
+				)
+				setLoading(false)
 			} catch (error) {
 				Alert.alert(
 					'Erreur',
@@ -55,7 +69,11 @@ export const BookDetailsScreen = (
 				)
 			}
 		})()
-	}, [book])
+
+		return () => {
+			source.cancel()
+		}
+	}, [book]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	// navigate when click
 	const navigateBookDetails = (bookIndex: number): void => {
@@ -132,20 +150,26 @@ export const BookDetailsScreen = (
 								appearance="hint">
 								Livres de l'auteur
 							</Text>
-							<FlatList
-								horizontal
-								style={styles.list}
-								data={sameAuthorBooks}
-								keyExtractor={(item) => item.id}
-								renderItem={({ item, index }) => (
-									<BookItemSmallLayout
-										book={item}
-										navigate={() =>
-											navigateBookDetails(index)
-										}
-									/>
-								)}
-							/>
+							{loading ? (
+								<View style={styles.loadingContainer}>
+									<Spinner />
+								</View>
+							) : (
+								<FlatList
+									horizontal
+									style={styles.list}
+									data={sameAuthorBooks}
+									keyExtractor={(item) => item.id}
+									renderItem={({ item, index }) => (
+										<BookItemSmallLayout
+											book={item}
+											navigate={() =>
+												navigateBookDetails(index)
+											}
+										/>
+									)}
+								/>
+							)}
 						</View>
 					</Layout>
 				</ScrollView>
@@ -165,6 +189,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginTop: 10,
 		marginBottom: 20,
+	},
+
+	loadingContainer: {
+		alignItems: 'center',
+		marginTop: 20,
 	},
 
 	image: {

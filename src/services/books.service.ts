@@ -1,18 +1,26 @@
-import { BookImageProps } from '../data/book.helper'
 // imports
 import { BookProps } from '../data/book.helper'
-import { BOOK_API_URL, BOOK_API_KEY } from '../config/env'
+import { BookImageProps } from '../data/book.helper'
+import axios from '../config/axios.config'
+import { CancelTokenSource } from 'axios'
 
 // exports
 /**
  * Get all books matches with search value
  * @param query value of the search
  */
-export const searchBooks = async (query: string): Promise<BookProps[]> => {
-	const result = await fetch(
-		`${BOOK_API_URL}/volumes?key=${BOOK_API_KEY}&q=${query}&orderBy=relevance`
-	)
-	const values = await result.json()
+export const searchBooks = async (
+	query: string,
+	cancelationSource: CancelTokenSource
+): Promise<BookProps[]> => {
+	const result = await axios.get('volumes', {
+		params: {
+			orderBy: 'relevance',
+			q: query,
+		},
+		cancelToken: cancelationSource.token,
+	})
+	const values = result.data
 	const items: any[] = values?.items
 
 	if (!items || items.length === 0) return []
@@ -59,5 +67,6 @@ export const searchBooks = async (query: string): Promise<BookProps[]> => {
  * @param author name of the author
  */
 export const searchBooksFromAuthor = async (
-	author: string
-): Promise<BookProps[]> => await searchBooks(author)
+	author: string,
+	cancelationSource: CancelTokenSource
+): Promise<BookProps[]> => await searchBooks(author, cancelationSource)
