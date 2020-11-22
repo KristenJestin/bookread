@@ -53,3 +53,11 @@ export const searchBooks = async (query: string): Promise<BookProps[]> => {
 			book !== null && book !== undefined
 	)
 }
+
+/**
+ * Get books from author
+ * @param author name of the author
+ */
+export const searchBooksFromAuthor = async (
+	author: string
+): Promise<BookProps[]> => await searchBooks(author)

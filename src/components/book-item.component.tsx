@@ -11,13 +11,13 @@ import {
 import { BookProps } from '../data/book.helper'
 import { GoIcon } from '../assets/icons'
 
-interface BookLayoutProps extends LayoutProps {
+interface BookItemLayoutProps extends LayoutProps {
 	book: BookProps
-	navigate: () => any
+	navigate: () => void
 }
 
-export const BookItemLayout = (props: BookLayoutProps): LayoutElement => {
-	const { book } = props
+export const BookItemLayout = (props: BookItemLayoutProps): LayoutElement => {
+	const { book, navigate } = props
 
 	// get image
 	const image =
@@ -73,7 +73,7 @@ export const BookItemLayout = (props: BookLayoutProps): LayoutElement => {
 					style={styles.button}
 					accessoryRight={GoIcon}
 					appearance="ghost"
-					onPress={() => props.navigate()}
+					onPress={() => navigate()}
 					size="small">
 					Afficher le livre
 				</Button>
