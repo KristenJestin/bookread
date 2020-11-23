@@ -16,12 +16,13 @@ jobs:
         needs: install
         runs-on: ubuntu-latest
         steps:
-            - name: Make envfile        
+            - uses: actions/checkout@v2
+            - name: Make envfile
               run: |
-                touch .env
-                echo BOOK_API_URL=\"https://www.googleapis.com/books/v1\" >> .env
-                echo BOOK_API_KEY=${{ secrets.BOOK_API_KEY }} >> .env
-                cat .env
+                  touch .env
+                  echo BOOK_API_URL=\"https://www.googleapis.com/books/v1\" >> .env
+                  echo BOOK_API_KEY=${{ secrets.BOOK_API_KEY }} >> .env
+                  cat .env
             - name: Gradlew permissions
               run: |
                   cd android && chmod +x ./gradlew
