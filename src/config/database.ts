@@ -2,6 +2,7 @@
 import Realm from 'realm'
 import 'react-native-get-random-values'
 import { v1 as uuid } from 'uuid'
+import Book from '../data/models/book.model'
 import BookIdentifier from '../data/models/book-identifier.model'
 
 // exports
@@ -10,8 +11,8 @@ export default class Database {
 
 	public static setupConnection = async () => {
 		const options = {
-			schema: [BookIdentifier],
-			schemaVersion: 1,
+			schema: [Book, BookIdentifier],
+			schemaVersion: 2,
 		}
 
 		Database.db = await Realm.open(options)

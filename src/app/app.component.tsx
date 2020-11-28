@@ -5,17 +5,30 @@ import * as eva from '@eva-design/eva'
 import { NavigationContainer } from '@react-navigation/native'
 import { theme, mapping, navigatorTheme } from './app-theming'
 import { HomeNavigator } from '../navigation/home.navigator'
+import Database from '../config/database'
 
-export default (): React.ReactElement => (
-	<>
-		<IconRegistry icons={EvaIconsPack} />
-		<ApplicationProvider
-			{...eva}
-			theme={{ ...eva.dark, ...theme }}
-			customMapping={mapping}>
-			<NavigationContainer theme={navigatorTheme}>
-				<HomeNavigator />
-			</NavigationContainer>
-		</ApplicationProvider>
-	</>
-)
+export default (): React.ReactElement => {
+	React.useEffect(() => {
+		;(async () => {
+			await Database.setupConnection()
+		})()
+
+		return () => {
+			Database.closeConnection()
+		}
+	}, [])
+
+	return (
+		<>
+			<IconRegistry icons={EvaIconsPack} />
+			<ApplicationProvider
+				{...eva}
+				theme={{ ...eva.dark, ...theme }}
+				customMapping={mapping}>
+				<NavigationContainer theme={navigatorTheme}>
+					<HomeNavigator />
+				</NavigationContainer>
+			</ApplicationProvider>
+		</>
+	)
+}
