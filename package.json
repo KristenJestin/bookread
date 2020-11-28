@@ -9,7 +9,8 @@
 		"ios": "react-native run-ios",
 		"start": "react-native start",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-		"format": "prettier --write \"**/*.{js,ts,jsx,tsx}\""
+		"format": "prettier --write \"**/*.{js,ts,jsx,tsx}\"",
+		"extract:database": "sh ./scripts/extract-realm-database-android.sh"
 	},
 	"dependencies": {
 		"@eva-design/eva": "2.0.0",
