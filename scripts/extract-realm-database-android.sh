@@ -8,5 +8,5 @@ if [[ ${ADB_FOUND} == ${NOT_PRESENT} ]]; then
     echo "Make sure a device is connected"
 else
     adb exec-out run-as ${PACKAGE_NAME} cat files/${DB_NAME} > ${DESTINATION_PATH}
-    echo "Database exported to ${DESTINATION_PATH}"
+    echo -e "\e[32mDatabase exported to \e[1m ${DESTINATION_PATH}\e[0m"
 fi

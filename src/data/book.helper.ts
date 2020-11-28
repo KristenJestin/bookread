@@ -1,6 +1,6 @@
 export type BookIdentifierProps = {
-	id: string
 	type: string
+	identifier: string
 }
 export type BookImageProps = {
 	type: string

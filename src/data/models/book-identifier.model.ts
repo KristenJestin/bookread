@@ -1,4 +1,6 @@
 import Realm from 'realm'
+import { generateModelId } from './default.model'
+import { BookIdentifierProps } from '../book.helper'
 
 export interface BookIdentifierData {
 	id: string
@@ -30,4 +32,16 @@ export default class BookIdentifier
 	public id!: string
 	public name!: string
 	public value!: string
+
+	static BuildFromHelper = (
+		identifierProps: BookIdentifierProps
+	): BookIdentifierData => {
+		const identifier: BookIdentifierData = {
+			id: generateModelId(),
+			name: identifierProps.type,
+			value: identifierProps.identifier,
+		}
+
+		return identifier
+	}
 }

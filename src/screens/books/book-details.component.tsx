@@ -141,7 +141,10 @@ export const BookDetailsScreen = (
 								appearance="hint">
 								Catégories
 							</Text>
-							<Text>{book.categories.join(', ')}</Text>
+
+							{book.categories && book.categories.length && (
+								<Text>{book.categories.join(', ')}</Text>
+							)}
 						</View>
 						<View style={styles.infoContainer}>
 							<Text

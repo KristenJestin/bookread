@@ -1,7 +1,5 @@
 // imports
 import Realm from 'realm'
-import 'react-native-get-random-values'
-import { v1 as uuid } from 'uuid'
 import Book from '../data/models/book.model'
 import BookIdentifier from '../data/models/book-identifier.model'
 
@@ -12,11 +10,19 @@ export default class Database {
 	public static setupConnection = async () => {
 		const options = {
 			schema: [Book, BookIdentifier],
-			schemaVersion: 2,
+			schemaVersion: 13,
 		}
 
 		Database.db = await Realm.open(options)
 		console.info('DATABASE : connection opened')
+		// Database.db.write(() => {
+		// 	Database.db.deleteAll()
+		// 	Database.db.deleteModel('Book')
+		// 	Database.db.deleteModel('BookIdentifier')
+		// 	Database.db.deleteModel('BookIdentifiers')
+		// 	Database.db.deleteModel('book-identifiers')
+		// 	console.info('DATABASE : all data deleted')
+		// })
 	}
 
 	public static closeConnection = () => {
@@ -27,8 +33,6 @@ export default class Database {
 	}
 
 	public static getConnection = (): Realm => Database.db
-
-	public static generateId = (): string => uuid()
 
 	public static insert = <T extends Realm.Object>(
 		type: { new (...arg: any[]): T },
@@ -69,10 +73,34 @@ export default class Database {
 			resolve(Database.getConnection().objectForPrimaryKey<T>(type, key))
 		})
 
-	public static get = <T extends Realm.Object>(type: {
-		new (...arg: any[]): T
-	}): Promise<Realm.Results<T & Realm.Object>> =>
+	public static get = <T extends Realm.Object>(
+		type: {
+			new (...arg: any[]): T
+		},
+		callback?: (n: Realm.Results<T>) => Realm.Results<T>
+	): Promise<Realm.Results<T>> =>
 		new Promise((resolve) => {
-			resolve(Database.getConnection().objects<T>(type))
+			const objects = Database.getConnection().objects<T>(type)
+			if (callback) {
+				resolve(callback(objects))
+				return
+			}
+
+			resolve(objects)
+		})
+
+	// public static update = <T extends Realm.Object>(type: {
+	// 	new (...arg: any[]): T
+	// }): Promise<Realm.Results<T & Realm.Object>> =>
+	// 	new Promise(() => {
+	// 		throw new Error('NotImplementedError')
+	// 	})
+
+	public static delete = (object: Realm.Object): Promise<Boolean> =>
+		new Promise((resolve) => {
+			Database.getConnection().write(() => {
+				Database.getConnection().delete(object)
+				resolve(true)
+			})
 		})
 }

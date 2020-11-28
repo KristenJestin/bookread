@@ -5,8 +5,8 @@ import {
 	createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import { HomeTabBar } from '../screens/home'
-import { ReadingScreen } from '../screens/reading'
 import { BooksNavigator } from './books.navigator'
+import { ReadingNavigator } from './reading.navigator'
 import { AppRoute } from './app-routes'
 import { ReadingIcon, BooksIcon } from '../assets/icons'
 
@@ -35,7 +35,7 @@ export const HomeNavigator = (): React.ReactElement => (
 	<BottomTab.Navigator tabBar={HomeTabBar}>
 		<BottomTab.Screen
 			name={AppRoute.READING}
-			component={ReadingScreen}
+			component={ReadingNavigator}
 			options={{ title: 'LECTURES', tabBarIcon: ReadingIcon }}
 		/>
 		<BottomTab.Screen
