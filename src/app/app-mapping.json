@@ -14,10 +14,10 @@
 		"text-caption-1-font-family": "TitilliumWeb-Bold",
 		"text-label-font-family": "TitilliumWeb-Bold",
 
-		"text-paragraph-1-font-size": 16,
-		"text-paragraph-2-font-size": 16,
-		"text-subtitle-1-font-size": 15,
-		"text-subtitle-2-font-size": 15,
+		"text-paragraph-1-font-size": 15,
+		"text-paragraph-2-font-size": 15,
+		"text-subtitle-1-font-size": 14,
+		"text-subtitle-2-font-size": 14,
 		"text-caption-1-font-size": 13,
 		"text-caption-2-font-size": 13,
 		"text-label-font-size": 13

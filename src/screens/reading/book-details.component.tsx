@@ -11,6 +11,7 @@ import { BookSavedDetailsScreenProps } from '../../navigation/reading.navigator'
 import { Toolbar } from '../../components/toolbar.component'
 import Book from '../../data/models/book.model'
 import Database from '../../config/database'
+import BackButton from '../../components/back-button.component'
 
 export type BookSavedDetailsRouteParams = {
 	bookKey: string
@@ -60,42 +61,25 @@ export const BookSavedDetailsScreen = (
 
 	return (
 		<React.Fragment>
-			<View>
-				<Toolbar
-					title="Détails"
-					onBackPress={props.navigation.goBack}
-				/>
-			</View>
-			<Divider />
 			<Layout style={styles.mainContainer}>
 				<ScrollView>
-					<View
-						style={{
-							width: '100%',
-							height: 200,
-							justifyContent: 'center',
-						}}>
-						<Text category="h4" style={styles.title}>
-							{book.title}
-						</Text>
-						<Text
-							category="p2"
-							appearance="hint"
-							style={styles.subtitle}>
-							{subtitle()}
-						</Text>
+					<View style={styles.coverContainer}>
 						<Image
-							style={{
-								height: '100%',
-								width: '100%',
-								resizeMode: 'cover',
-								opacity: 0.12,
-								position: 'absolute',
-							}}
+							style={styles.coverImage}
 							source={{
 								uri: book.image,
 							}}
 						/>
+						<BackButton onPress={props.navigation.goBack} />
+						<Text category="p1" style={styles.title}>
+							{book.title}
+						</Text>
+						<Text
+							category="s2"
+							appearance="hint"
+							style={styles.subtitle}>
+							{subtitle()}
+						</Text>
 					</View>
 					<Layout style={styles.container}>
 						<View style={styles.infoContainer}>
@@ -105,7 +89,7 @@ export const BookSavedDetailsScreen = (
 								appearance="hint">
 								Description
 							</Text>
-							<Text>{book.description}</Text>
+							<Text category="p2">{book.description}</Text>
 						</View>
 						<View style={styles.infoContainer}>
 							<Text
@@ -116,7 +100,9 @@ export const BookSavedDetailsScreen = (
 							</Text>
 
 							{book.categories && book.categories.length && (
-								<Text>{book.categories.join(', ')}</Text>
+								<Text category="p2">
+									{book.categories.join(', ')}
+								</Text>
 							)}
 						</View>
 					</Layout>
@@ -128,6 +114,19 @@ export const BookSavedDetailsScreen = (
 
 const styles = StyleSheet.create({
 	mainContainer: { flex: 1 },
+	coverContainer: {
+		width: '100%',
+		height: 200,
+		justifyContent: 'center',
+	},
+	coverImage: {
+		height: '100%',
+		width: '100%',
+		resizeMode: 'cover',
+		opacity: 0.12,
+		position: 'absolute',
+	},
+
 	container: {
 		flex: 1,
 		padding: 20,
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		marginTop: 15,
-		fontWeight: 'bold',
+		fontSize: 28,
 		textAlign: 'center',
 	},
 	subtitle: {
@@ -166,7 +165,6 @@ const styles = StyleSheet.create({
 	},
 	headerText: {
 		textTransform: 'uppercase',
-		fontWeight: 'bold',
 	},
 
 	list: {
