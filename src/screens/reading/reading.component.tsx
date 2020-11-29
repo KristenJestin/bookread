@@ -37,16 +37,9 @@ export const ReadingScreen = (props: ReadingScreenProps): LayoutElement => {
 
 	return (
 		<React.Fragment>
-			<View>
-				<Toolbar title="BOOKREAD" />
-			</View>
-			<Divider />
 			<Layout style={styles.container}>
-				<Text
-					style={styles.headerText}
-					category="label"
-					appearance="hint">
-					Recent
+				<Text style={styles.headerText} category="h1">
+					Récent
 				</Text>
 				{loading ? (
 					<View style={styles.loadingContainer}>
@@ -75,10 +68,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 20,
 	},
-	headerText: {
-		textTransform: 'uppercase',
-		fontWeight: 'bold',
-	},
+	headerText: {},
 
 	loadingContainer: {
 		alignItems: 'center',
@@ -86,6 +76,6 @@ const styles = StyleSheet.create({
 	},
 
 	list: {
-		marginTop: 20,
+		marginTop: 30,
 	},
 })

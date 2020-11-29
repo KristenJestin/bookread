@@ -34,7 +34,7 @@ export const BookSavedItemLayout = (
 				<View style={styles.texts}>
 					<Text
 						style={styles.title}
-						category="h6"
+						category="p1"
 						numberOfLines={1}
 						ellipsizeMode="tail">
 						{book.title}
@@ -42,7 +42,7 @@ export const BookSavedItemLayout = (
 					{book.authors && book.authors.length && (
 						<Text
 							style={styles.subtitle}
-							category="p2"
+							category="c2"
 							appearance="hint"
 							numberOfLines={1}
 							ellipsizeMode="tail">
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
 	},
 
 	title: {
-		fontWeight: 'bold',
+		// fontWeight: '700',
 	},
 	subtitle: {},
 	description: {

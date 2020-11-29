@@ -8,18 +8,17 @@ import {
 } from '@ui-kitten/components'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import * as eva from '@eva-design/eva'
-import { NavigationContainer } from '@react-navigation/native'
-import { theme, mapping, navigatorTheme } from './app-theming'
-import { HomeNavigator } from '../navigation/home.navigator'
 import Database from '../config/database'
 import { StyleSheet } from 'react-native'
+import { AppNavigator } from '../navigation/app.navigator'
+import { theme, mapping } from '../app/app-theming'
 
 export default (): React.ReactElement => {
 	const [initialized, setInitialized] = React.useState(false)
 
 	React.useEffect(() => {
 		;(async () => {
-			// TODO: add  try/catch
+			// TODO: add try/catch
 			await Database.setupConnection()
 			setInitialized(true)
 		})()
@@ -43,9 +42,7 @@ export default (): React.ReactElement => {
 						<Spinner size="giant" />
 					</Layout>
 				) : (
-					<NavigationContainer theme={navigatorTheme}>
-						<HomeNavigator />
-					</NavigationContainer>
+					<AppNavigator />
 				)}
 			</ApplicationProvider>
 		</>

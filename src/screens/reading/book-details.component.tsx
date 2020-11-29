@@ -69,28 +69,35 @@ export const BookSavedDetailsScreen = (
 			<Divider />
 			<Layout style={styles.mainContainer}>
 				<ScrollView>
+					<View
+						style={{
+							width: '100%',
+							height: 200,
+							justifyContent: 'center',
+						}}>
+						<Text category="h4" style={styles.title}>
+							{book.title}
+						</Text>
+						<Text
+							category="p2"
+							appearance="hint"
+							style={styles.subtitle}>
+							{subtitle()}
+						</Text>
+						<Image
+							style={{
+								height: '100%',
+								width: '100%',
+								resizeMode: 'cover',
+								opacity: 0.12,
+								position: 'absolute',
+							}}
+							source={{
+								uri: book.image,
+							}}
+						/>
+					</View>
 					<Layout style={styles.container}>
-						<View style={styles.bookContainer}>
-							{book.image && (
-								<Image
-									style={styles.image}
-									source={{
-										uri: book.image,
-									}}
-								/>
-							)}
-							<Text category="h4" style={styles.title}>
-								{book.title}
-							</Text>
-							{book.authors && book.authors.length && (
-								<Text
-									category="p2"
-									appearance="hint"
-									style={styles.subtitle}>
-									{subtitle()}
-								</Text>
-							)}
-						</View>
 						<View style={styles.infoContainer}>
 							<Text
 								style={styles.headerText}
