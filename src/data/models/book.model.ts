@@ -1,6 +1,7 @@
 import Realm from 'realm'
 import BookIdentifier, { BookIdentifierData } from './book-identifier.model'
-import { DatedData, generateModelId } from './default.model'
+import { DatedData, DatedProperties, generateModelId } from './default.model'
+import { ReadingData } from './reading.model'
 import { BookProps } from '../book.helper'
 
 export interface BookData extends DatedData {
@@ -13,9 +14,11 @@ export interface BookData extends DatedData {
 	publishedAt?: Date
 	description: string
 	identifiers: BookIdentifierData[]
-	pageCount: number
+	pages: number
 	categories: string[]
 	image: string
+	currentReading?: ReadingData
+	readed: ReadingData[]
 }
 
 export default class Book extends Realm.Object implements BookData {
@@ -40,11 +43,12 @@ export default class Book extends Realm.Object implements BookData {
 			publishedAt: { type: 'date', optional: true },
 			description: 'string?',
 			identifiers: 'BookIdentifier[]',
-			pageCount: { type: 'int', default: 0 },
+			pages: { type: 'int', default: 0 },
 			categories: 'string[]',
 			image: 'string?',
-			createdAt: { type: 'date', default: new Date() },
-			updatedAt: { type: 'date', default: new Date() },
+			currentReading: 'Reading?',
+			readed: 'Reading[]',
+			...DatedProperties,
 		},
 	}
 
@@ -57,12 +61,30 @@ export default class Book extends Realm.Object implements BookData {
 	public publishedAt?: Date
 	public description!: string
 	public identifiers!: BookIdentifierData[]
-	public pageCount!: number
+	public pages!: number
 	public categories!: string[]
 	public image!: string
+	public currentReading?: ReadingData
+	public readed!: ReadingData[]
 	public createdAt!: Date
 	public updatedAt!: Date
 
+	// #region methods
+	public getSubtitle = (): string => {
+		let result = ''
+		if (this.authors && this.authors.length)
+			result += `par ${this.authors?.join(', ')}`
+
+		if (this.publishedAt) {
+			if (result !== '') result += ' • '
+			result += this.publishedAt.getFullYear()
+		}
+
+		return result
+	}
+	// #endregion
+
+	// #region statics
 	static BuildFromHelper = (bookProps: BookProps): BookData => {
 		const book: BookData = {
 			id: generateModelId(),
@@ -78,16 +100,18 @@ export default class Book extends Realm.Object implements BookData {
 			identifiers: bookProps.identifiers.map((identifier) =>
 				BookIdentifier.BuildFromHelper(identifier)
 			),
-			pageCount: bookProps.pageCount,
+			pages: bookProps.pageCount,
 			categories: bookProps.categories,
 			image: (
 				bookProps.images.find((image) => image.type === 'thumbnail') ??
 				bookProps.images[0]
 			)?.link,
+			readed: [],
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		}
 
 		return book
 	}
+	// #endregion
 }

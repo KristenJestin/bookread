@@ -2,6 +2,8 @@
 import Realm from 'realm'
 import Book from '../data/models/book.model'
 import BookIdentifier from '../data/models/book-identifier.model'
+import Reading from './../data/models/reading.model'
+import Session from '../data/models/session.model'
 
 // exports
 export default class Database {
@@ -9,8 +11,8 @@ export default class Database {
 
 	public static setupConnection = async () => {
 		const options = {
-			schema: [Book, BookIdentifier],
-			schemaVersion: 13,
+			schema: [Book, BookIdentifier, Reading, Session],
+			schemaVersion: 16,
 		}
 
 		Database.db = await Realm.open(options)
@@ -89,12 +91,17 @@ export default class Database {
 			resolve(objects)
 		})
 
-	// public static update = <T extends Realm.Object>(type: {
-	// 	new (...arg: any[]): T
-	// }): Promise<Realm.Results<T & Realm.Object>> =>
-	// 	new Promise(() => {
-	// 		throw new Error('NotImplementedError')
-	// 	})
+	public static query = (callback?: () => void): Promise<boolean> =>
+		new Promise((resolve) => {
+			Database.getConnection().write(() => {
+				if (callback) {
+					callback()
+					resolve(true)
+					return
+				}
+				resolve(false)
+			})
+		})
 
 	public static delete = (object: Realm.Object): Promise<Boolean> =>
 		new Promise((resolve) => {

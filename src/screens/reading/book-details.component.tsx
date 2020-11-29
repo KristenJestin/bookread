@@ -1,17 +1,19 @@
 import React from 'react'
 import { StyleSheet, Image, View, ScrollView } from 'react-native'
 import {
-	Divider,
 	Layout,
 	LayoutElement,
 	Spinner,
 	Text,
+	Button,
 } from '@ui-kitten/components'
 import { BookSavedDetailsScreenProps } from '../../navigation/reading.navigator'
-import { Toolbar } from '../../components/toolbar.component'
 import Book from '../../data/models/book.model'
 import Database from '../../config/database'
 import BackButton from '../../components/back-button.component'
+import { ReadingData } from '../../data/models/reading.model'
+import { generateModelId } from '../../data/models/default.model'
+import { ReadingDetailsLayout } from '../../components/reading/reading-details.component'
 
 export type BookSavedDetailsRouteParams = {
 	bookKey: string
@@ -22,6 +24,7 @@ export const BookSavedDetailsScreen = (
 ): LayoutElement => {
 	const { bookKey } = props.route.params
 	const [book, setBook] = React.useState<Book>()
+	const [update, setUpdate] = React.useState(false)
 
 	React.useMemo(() => {
 		;(async () => {
@@ -32,31 +35,24 @@ export const BookSavedDetailsScreen = (
 	if (!book) {
 		return (
 			<React.Fragment>
-				<View>
-					<Toolbar
-						title="Détails"
-						onBackPress={props.navigation.goBack}
-					/>
-				</View>
-				<Divider />
 				<Layout style={styles.loadingContainer}>
+					<BackButton onPress={props.navigation.goBack} />
 					<Spinner />
 				</Layout>
 			</React.Fragment>
 		)
 	}
 
-	const subtitle = (): string => {
-		let result = ''
-		if (book.authors && book.authors.length)
-			result += `par ${book.authors?.join(', ')}`
-
-		if (book.publishedAt) {
-			if (result !== '') result += ' • '
-			result += book.publishedAt.getFullYear()
-		}
-
-		return result
+	const startReading = async () => {
+		await Database.query(() => {
+			const reading: ReadingData = {
+				id: generateModelId(),
+				sessions: [],
+				pages: 0,
+			}
+			book.currentReading = reading
+		})
+		setUpdate((previousUpdate) => !previousUpdate)
 	}
 
 	return (
@@ -78,7 +74,7 @@ export const BookSavedDetailsScreen = (
 							category="s2"
 							appearance="hint"
 							style={styles.subtitle}>
-							{subtitle()}
+							{book.getSubtitle()}
 						</Text>
 					</View>
 					<Layout style={styles.container}>
@@ -87,7 +83,29 @@ export const BookSavedDetailsScreen = (
 								style={styles.headerText}
 								category="label"
 								appearance="hint">
-								Description
+								Lecture
+							</Text>
+							<View style={styles.readingContainer}>
+								{book.currentReading ? (
+									<ReadingDetailsLayout
+										reading={book.currentReading}
+										pages={book.pages}
+									/>
+								) : (
+									<Button
+										status="success"
+										onPress={startReading}>
+										COMMENCER À LIRE
+									</Button>
+								)}
+							</View>
+						</View>
+						<View style={styles.infoContainer}>
+							<Text
+								style={styles.headerText}
+								category="label"
+								appearance="hint">
+								Synopsis
 							</Text>
 							<Text category="p2">{book.description}</Text>
 						</View>
@@ -113,7 +131,9 @@ export const BookSavedDetailsScreen = (
 }
 
 const styles = StyleSheet.create({
-	mainContainer: { flex: 1 },
+	mainContainer: {
+		flex: 1,
+	},
 	coverContainer: {
 		width: '100%',
 		height: 200,
@@ -129,7 +149,11 @@ const styles = StyleSheet.create({
 
 	container: {
 		flex: 1,
-		padding: 20,
+		paddingVertical: 10,
+	},
+
+	readingContainer: {
+		marginTop: 10,
 	},
 
 	bookContainer: {
@@ -162,6 +186,8 @@ const styles = StyleSheet.create({
 
 	infoContainer: {
 		marginBottom: 25,
+		paddingHorizontal: 20,
+		paddingVertical: 10,
 	},
 	headerText: {
 		textTransform: 'uppercase',
