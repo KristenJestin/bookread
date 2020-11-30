@@ -14,6 +14,7 @@ import BackButton from '../../components/back-button.component'
 import { ReadingData } from '../../data/models/reading.model'
 import { generateModelId } from '../../data/models/default.model'
 import { ReadingDetailsLayout } from '../../components/reading/reading-details.component'
+import { AppRoute } from '../../navigation/app-routes'
 
 export type BookSavedDetailsRouteParams = {
 	bookKey: string
@@ -55,6 +56,12 @@ export const BookSavedDetailsScreen = (
 		setUpdate((previousUpdate) => !previousUpdate)
 	}
 
+	const navigateSession = async () => {
+		props.navigation.navigate(AppRoute.BOOK_SESSION, {
+			title: book.title,
+		})
+	}
+
 	return (
 		<React.Fragment>
 			<Layout style={styles.mainContainer}>
@@ -90,6 +97,7 @@ export const BookSavedDetailsScreen = (
 									<ReadingDetailsLayout
 										reading={book.currentReading}
 										pages={book.pages}
+										onPressSession={navigateSession}
 									/>
 								) : (
 									<Button

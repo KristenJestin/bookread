@@ -14,13 +14,14 @@ import { ReadingData } from '../../data/models/reading.model'
 interface ReadingDetailsLayoutProps extends LayoutProps {
 	reading: ReadingData
 	pages: number
+	onPressSession: () => void
 }
 
 export const ReadingDetailsLayout = (
 	props: ReadingDetailsLayoutProps
 ): LayoutElement => {
 	const styles = useStyleSheet(themedStyle)
-	const { reading, pages } = props
+	const { reading, pages, onPressSession } = props
 
 	const progress = Math.round(((reading.pages * 100) / pages) * 10) / 10
 
@@ -43,7 +44,7 @@ export const ReadingDetailsLayout = (
 			<View style={styles.progressContainer}>
 				<View style={[styles.progress, { width: `${progress}%` }]} />
 			</View>
-			<Button style={styles.newSession}>
+			<Button style={styles.newSession} onPress={onPressSession}>
 				Nouvelle session de lecture
 			</Button>
 		</Layout>
