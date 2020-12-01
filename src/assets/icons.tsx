@@ -20,3 +20,15 @@ export const BooksIcon = (props: any): IconElement => (
 export const GoIcon = (props: any): IconElement => (
 	<Icon {...props} name="chevron-right" />
 )
+
+export const PlayIcon = (props: any): IconElement => (
+	<Icon {...props} name="play-circle" />
+)
+
+export const PauseIcon = (props: any): IconElement => (
+	<Icon {...props} name="pause-circle-outline" />
+)
+
+export const AlertIcon = (props: any): IconElement => (
+	<Icon {...props} name="alert-triangle-outline" />
+)
