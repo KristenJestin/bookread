@@ -7,13 +7,13 @@ import {
 import { ReadingTabNavigationProp } from './home.navigator'
 import { AppRoute } from './app-routes'
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs'
+import { ReadingScreen } from '../screens/reading'
 import {
-	ReadingScreen,
 	BookSavedDetailsScreen,
 	BookSavedDetailsRouteParams,
 	SessionScreen,
 	SessionRouteParams,
-} from '../screens/reading'
+} from '../screens/books'
 
 type ReadingNavigatorParams = {
 	[AppRoute.READING]: undefined

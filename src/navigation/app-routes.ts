@@ -4,4 +4,5 @@ export enum AppRoute {
 	BOOK_DETAILS = 'Détails du livre',
 	BOOK_SESSION = 'Session',
 	NEW = 'Nouveau Livre',
+	SEARCH = 'Recherche',
 }

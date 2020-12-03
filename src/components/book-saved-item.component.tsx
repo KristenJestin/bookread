@@ -1,15 +1,16 @@
 import React from 'react'
-import { StyleSheet, Image, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import {
 	Button,
 	Layout,
 	LayoutElement,
 	LayoutProps,
+	StyleService,
 	Text,
+	useStyleSheet,
 } from '@ui-kitten/components'
 
 import Book from '../data/models/book.model'
-import { GoIcon } from '../assets/icons'
 
 interface BookSavedItemLayoutProps extends LayoutProps {
 	book: Book
@@ -19,16 +20,40 @@ interface BookSavedItemLayoutProps extends LayoutProps {
 export const BookSavedItemLayout = (
 	props: BookSavedItemLayoutProps
 ): LayoutElement => {
+	const styles = useStyleSheet(themedStyle)
 	const { book, navigate } = props
+
+	const renderProgress = () => {
+		if (book.currentReading) {
+			const progress =
+				Math.round(
+					(((book.currentReading?.pages || 0) * 100) / book.pages) *
+						10
+				) / 10
+			return (
+				<View style={styles.progressContainer}>
+					<View
+						style={[styles.progress, { width: `${progress}%` }]}
+					/>
+				</View>
+			)
+		}
+
+		return null
+	}
+
 	return (
 		<Layout style={styles.container}>
 			{book.image && (
-				<Image
-					style={styles.image}
-					source={{
-						uri: book.image,
-					}}
-				/>
+				<View style={styles.coverContainer}>
+					<Image
+						style={reactStyles.image}
+						source={{
+							uri: book.image,
+						}}
+					/>
+					{renderProgress()}
+				</View>
 			)}
 			<View style={styles.info}>
 				<View style={styles.texts}>
@@ -68,7 +93,16 @@ export const BookSavedItemLayout = (
 	)
 }
 
-const styles = StyleSheet.create({
+const reactStyles = StyleSheet.create({
+	image: {
+		height: 150,
+		aspectRatio: 1 / 1.4,
+		backgroundColor: 'gray',
+		resizeMode: 'cover',
+	},
+})
+
+const themedStyle = StyleService.create({
 	container: {
 		height: 150,
 		flexDirection: 'row',
@@ -82,12 +116,24 @@ const styles = StyleSheet.create({
 	},
 	texts: {},
 
-	image: {
-		height: 150,
-		aspectRatio: 1 / 1.4,
-		backgroundColor: 'gray',
-		resizeMode: 'cover',
+	coverContainer: {
+		overflow: 'hidden',
 		borderRadius: 12,
+	},
+	progressContainer: {
+		height: 6,
+		borderRadius: 3,
+		backgroundColor: 'background-basic-color-2',
+		overflow: 'hidden',
+		opacity: 0.7,
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		right: 0,
+	},
+	progress: {
+		flex: 1,
+		backgroundColor: 'color-primary-default',
 	},
 
 	title: {

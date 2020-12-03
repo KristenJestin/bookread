@@ -4,21 +4,19 @@ import { Layout, LayoutElement, Spinner, Text } from '@ui-kitten/components'
 import Book from '../../data/models/book.model'
 import { BookSavedItemLayout } from '../../components/book-saved-item.component'
 import Database from '../../config/database'
-import { ReadingScreenProps } from '../../navigation/reading.navigator'
+import { BooksScreenProps } from '../../navigation/books-list.navigator'
 import { AppRoute } from '../../navigation/app-routes'
 
-export const ReadingScreen = (props: ReadingScreenProps): LayoutElement => {
+export const BooksScreen = (props: BooksScreenProps): LayoutElement => {
 	const [loading, setLoading] = React.useState(true)
 	const [books, setBooks] = React.useState<Book[]>([])
 	const [, setUpdate] = React.useState(false)
 
-	// get all books with reading
+	// get all books with books
 	React.useEffect(() => {
 		;(async () => {
 			const savedBooks = await Database.get(Book, (dbBooks) =>
-				dbBooks
-					.filtered('currentReading != null')
-					.sorted('updatedAt', true)
+				dbBooks.sorted('updatedAt', true)
 			)
 			setBooks(Array.from(savedBooks))
 			setLoading(false)
@@ -46,7 +44,7 @@ export const ReadingScreen = (props: ReadingScreenProps): LayoutElement => {
 	return (
 		<React.Fragment>
 			<Layout style={styles.container}>
-				<Text category="h1">Récent</Text>
+				<Text category="h1">Livres</Text>
 				{loading ? (
 					<View style={styles.loadingContainer}>
 						<Spinner />

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Alert, FlatList, StyleSheet, View } from 'react-native'
 import {
-	Divider,
 	Input,
 	Layout,
 	LayoutElement,
@@ -9,13 +8,12 @@ import {
 	Text,
 } from '@ui-kitten/components'
 import Axios from 'axios'
-import { Toolbar } from '../../components/toolbar.component'
 import { SearchIcon } from '../../assets/icons'
 import { searchBooks } from '../../services/books.service'
 import { BookProps } from '../../data/book.helper'
 import { BookItemLayout } from '../../components/book-item.component'
 import { AppRoute } from '../../navigation/app-routes'
-import { BooksScreenProps } from '../../navigation/books.navigator'
+import { BooksScreenProps } from '../../navigation/books-list.navigator'
 
 export const BooksScreen = (props: BooksScreenProps): LayoutElement => {
 	const [books, setBooks] = React.useState<BookProps[]>([])
@@ -57,24 +55,9 @@ export const BooksScreen = (props: BooksScreenProps): LayoutElement => {
 
 	return (
 		<React.Fragment>
-			<View>
-				<Toolbar title="BOOKREAD" />
-			</View>
-			<Divider />
 			<Layout style={styles.container}>
-				<View style={styles.searchContainer}>
-					<Input
-						value={search}
-						accessoryLeft={SearchIcon}
-						placeholder="Rechercher un livre"
-						onChangeText={(nextValue) => setSearch(nextValue)}
-					/>
-				</View>
-				<Text
-					style={styles.headerText}
-					category="label"
-					appearance="hint">
-					Resultats
+				<Text style={styles.headerText} category="h1">
+					Recherche
 				</Text>
 				{loading ? (
 					<View style={styles.loadingContainer}>
@@ -93,6 +76,14 @@ export const BooksScreen = (props: BooksScreenProps): LayoutElement => {
 						)}
 					/>
 				)}
+				<View style={styles.searchContainer}>
+					<Input
+						value={search}
+						accessoryLeft={SearchIcon}
+						placeholder="Rechercher un livre"
+						onChangeText={(nextValue) => setSearch(nextValue)}
+					/>
+				</View>
 			</Layout>
 		</React.Fragment>
 	)
@@ -101,22 +92,23 @@ export const BooksScreen = (props: BooksScreenProps): LayoutElement => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+	},
+	headerText: {
 		padding: 20,
 	},
-	searchContainer: {
-		marginBottom: 15,
+	list: {
+		padding: 20,
+		// marginTop: 30,
+		// marginBottom: 15,
 	},
 
 	loadingContainer: {
 		alignItems: 'center',
-		marginTop: 20,
+		justifyContent: 'center',
+		flex: 1,
 	},
-
-	headerText: {
-		textTransform: 'uppercase',
-		fontWeight: 'bold',
-	},
-	list: {
-		marginTop: 20,
+	searchContainer: {
+		paddingVertical: 10,
+		paddingHorizontal: 20,
 	},
 })

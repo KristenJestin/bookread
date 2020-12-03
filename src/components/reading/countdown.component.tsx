@@ -6,33 +6,11 @@ import { pad } from '../../utils/number'
 
 // exports
 export type CountdownProps = {
-	started: boolean
-	onTimeChanged: (num: number) => void
+	time: number
 }
 
-export default ({
-	started,
-	onTimeChanged,
-}: CountdownProps): React.ReactElement => {
+export default ({ time }: CountdownProps): React.ReactElement => {
 	const styles = useStyleSheet(themedStyle)
-	const [time, setTime] = React.useState(0)
-	let interval: number | undefined
-
-	React.useEffect(() => {
-		if (started) {
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			interval = setInterval(() => {
-				onTimeChanged(time + 1)
-				setTime((lastTime) => lastTime + 1)
-			}, 934)
-		} else {
-			if (interval !== undefined) clearInterval(interval)
-		}
-
-		return () => {
-			if (interval !== undefined) clearInterval(interval)
-		}
-	}, [started, time])
 
 	const minutes = Math.floor(time / 60)
 	const seconds = time - minutes * 60
