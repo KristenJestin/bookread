@@ -32,3 +32,11 @@ export const PauseIcon = (props: any): IconElement => (
 export const AlertIcon = (props: any): IconElement => (
 	<Icon {...props} name="alert-triangle-outline" />
 )
+
+export const SavedIcon = (props: any): IconElement => (
+	<Icon {...props} name="bookmark-outline" />
+)
+
+export const SavedCheckIcon = (props: any): IconElement => (
+	<Icon {...props} name="bookmark" />
+)

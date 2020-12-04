@@ -66,25 +66,23 @@ export default class Book extends Realm.Object implements BookData {
 	public image!: string
 	public currentReading?: ReadingData
 	public readed!: ReadingData[]
-	public createdAt!: Date
-	public updatedAt!: Date
+	public createdAt?: Date
+	public updatedAt?: Date
 
-	// #region methods
-	public getSubtitle = (): string => {
+	// #region statics
+	public static getSubtitle = (book: Book): string => {
 		let result = ''
-		if (this.authors && this.authors.length)
-			result += `par ${this.authors?.join(', ')}`
+		if (book.authors && book.authors.length)
+			result += `par ${book.authors?.join(', ')}`
 
-		if (this.publishedAt) {
+		if (book.publishedAt) {
 			if (result !== '') result += ' • '
-			result += this.publishedAt.getFullYear()
+			result += book.publishedAt.getFullYear()
 		}
 
 		return result
 	}
-	// #endregion
 
-	// #region statics
 	static BuildFromHelper = (bookProps: BookProps): BookData => {
 		const book: BookData = {
 			id: generateModelId(),

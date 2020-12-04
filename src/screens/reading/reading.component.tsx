@@ -12,29 +12,31 @@ export const ReadingScreen = (props: ReadingScreenProps): LayoutElement => {
 	const [books, setBooks] = React.useState<Book[]>([])
 	const [, setUpdate] = React.useState(false)
 
+	const findLastBooks = async () => {
+		const savedBooks = await Database.get(Book, (dbBooks) =>
+			dbBooks.filtered('currentReading != null').sorted('updatedAt', true)
+		)
+		setBooks(Array.from(savedBooks))
+		setLoading(false)
+	}
+
 	// get all books with reading
 	React.useEffect(() => {
-		;(async () => {
-			const savedBooks = await Database.get(Book, (dbBooks) =>
-				dbBooks
-					.filtered('currentReading != null')
-					.sorted('updatedAt', true)
-			)
-			setBooks(Array.from(savedBooks))
-			setLoading(false)
-		})()
+		;(async () => await findLastBooks())()
 	}, [])
 
-	// event on navigation go back here
+	// get update from books
 	React.useEffect(() => {
-		const updateAction = () => {
-			setUpdate((upd) => !upd)
-			return true
+		function updateUI() {
+			;(async () => {
+				setLoading(true)
+				await findLastBooks()
+			})()
 		}
-		props.navigation.addListener('focus', updateAction)
+		Database.getConnection().addListener('change', updateUI)
 
-		return () => props.navigation.removeListener('focus', updateAction)
-	}, [props.navigation])
+		return () => Database.getConnection().removeListener('change', updateUI)
+	}, [])
 
 	// navigate when click
 	const navigateBookDetails = (book: Book): void => {

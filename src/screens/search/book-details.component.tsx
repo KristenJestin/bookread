@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	Alert,
 	FlatList,
+	TouchableOpacity,
 } from 'react-native'
 import { Layout, LayoutElement, Spinner, Text } from '@ui-kitten/components'
 import Axios from 'axios'
@@ -15,6 +16,9 @@ import { searchBooksFromAuthor } from '../../services/books.service'
 import { BookItemSmallLayout } from '../../components/book-item-small.component'
 import { AppRoute } from '../../navigation/app-routes'
 import BackButton from '../../components/back-button.component'
+import { SavedCheckIcon, SavedIcon } from '../../assets/icons'
+import Database from '../../config/database'
+import Book from '../../data/models/book.model'
 
 export type BookDetailsRouteParams = {
 	book: BookProps
@@ -28,6 +32,7 @@ export const BookDetailsScreen = (
 		[]
 	)
 	const [loading, setLoading] = React.useState(false)
+	const [saved, setSaved] = React.useState(false)
 
 	// make request to get books from author
 	React.useEffect(() => {
@@ -55,6 +60,13 @@ export const BookDetailsScreen = (
 								new Date(a.publishedDate).getTime()
 						)
 				)
+
+				// check if book is already saved
+				const similiarBooks = await Database.get(Book, (dbBooks) =>
+					dbBooks.filtered(`googleId = "${book.id}"`)
+				)
+
+				if (similiarBooks && similiarBooks.length > 0) setSaved(true)
 				setLoading(false)
 			} catch (error) {
 				Alert.alert(
@@ -73,6 +85,13 @@ export const BookDetailsScreen = (
 	const navigateBookDetails = (bookIndex: number): void => {
 		const { [bookIndex]: nextBook } = sameAuthorBooks
 		props.navigation.navigate(AppRoute.BOOK_DETAILS, { book: nextBook })
+	}
+
+	const markPress = async () => {
+		if (!saved) {
+			await Database.insert(Book, Book.BuildFromHelper(book))
+			setSaved(true)
+		}
 	}
 
 	// get image
@@ -112,6 +131,21 @@ export const BookDetailsScreen = (
 										).getFullYear()}`}
 								</Text>
 							)}
+						</View>
+						<View style={styles.saveContainer}>
+							<TouchableOpacity onPress={markPress}>
+								{saved ? (
+									<SavedCheckIcon
+										style={styles.saveIcon}
+										fill="#eb4034"
+									/>
+								) : (
+									<SavedIcon
+										style={styles.saveIcon}
+										fill="#8F9BB3"
+									/>
+								)}
+							</TouchableOpacity>
 						</View>
 						<View style={styles.infoContainer}>
 							<Text
@@ -180,6 +214,15 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginTop: 10,
 		marginBottom: 20,
+	},
+
+	saveContainer: {
+		flex: 1,
+		alignItems: 'center',
+	},
+	saveIcon: {
+		height: 55,
+		width: 55,
 	},
 
 	loadingContainer: {

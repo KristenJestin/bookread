@@ -83,12 +83,14 @@ export const BookSavedDetailsScreen = (
 			<Layout style={styles.mainContainer}>
 				<ScrollView>
 					<View style={styles.coverContainer}>
-						<Image
-							style={styles.coverImage}
-							source={{
-								uri: book.image,
-							}}
-						/>
+						{book.image && (
+							<Image
+								style={styles.coverImage}
+								source={{
+									uri: book.image,
+								}}
+							/>
+						)}
 						<BackButton onPress={props.navigation.goBack} />
 						<Text category="p1" style={styles.title}>
 							{book.title}
@@ -97,7 +99,7 @@ export const BookSavedDetailsScreen = (
 							category="s2"
 							appearance="hint"
 							style={styles.subtitle}>
-							{book.getSubtitle()}
+							{Book.getSubtitle(book)}
 						</Text>
 					</View>
 					<Layout style={styles.container}>
@@ -140,8 +142,7 @@ export const BookSavedDetailsScreen = (
 								appearance="hint">
 								Catégories
 							</Text>
-
-							{book.categories && book.categories.length && (
+							{book.categories && (
 								<Text category="p2">
 									{book.categories.join(', ')}
 								</Text>
