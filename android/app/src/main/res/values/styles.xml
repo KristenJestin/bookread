@@ -1,9 +1,11 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="android:textColor">#000000</item>
-    </style>
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<!-- Customize your theme here. -->
+		<item name="android:textColor">#000000</item>
+		<!-- <item name="android:navigationBarColor">#212e34</item> -->
+		<item name="android:navigationBarColor">#311777</item>
+	</style>
 
 </resources>

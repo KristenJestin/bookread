@@ -9,7 +9,7 @@ import {
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import * as eva from '@eva-design/eva'
 import Database from '../config/database'
-import { StyleSheet } from 'react-native'
+import { StatusBar, StyleSheet } from 'react-native'
 import { AppNavigator } from '../navigation/app.navigator'
 import { theme, mapping } from '../app/app-theming'
 
@@ -36,6 +36,7 @@ export default (): React.ReactElement => {
 				{...eva}
 				theme={{ ...eva.dark, ...theme }}
 				customMapping={mapping}>
+				<StatusBar backgroundColor="#311777" barStyle="default" />
 				{!initialized ? (
 					<Layout style={styles.container}>
 						<Text style={styles.text}>Bookread</Text>

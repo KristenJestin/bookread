@@ -7,20 +7,14 @@ import {
 	Alert,
 	FlatList,
 } from 'react-native'
-import {
-	Divider,
-	Layout,
-	LayoutElement,
-	Spinner,
-	Text,
-} from '@ui-kitten/components'
+import { Layout, LayoutElement, Spinner, Text } from '@ui-kitten/components'
 import Axios from 'axios'
 import { BookProps } from '../../data/book.helper'
-import { BooksDetailsScreenProps } from '../../navigation/books-list.navigator'
-import { Toolbar } from '../../components/toolbar.component'
+import { BooksDetailsScreenProps } from '../../navigation/search.navigator'
 import { searchBooksFromAuthor } from '../../services/books.service'
 import { BookItemSmallLayout } from '../../components/book-item-small.component'
 import { AppRoute } from '../../navigation/app-routes'
+import BackButton from '../../components/back-button.component'
 
 export type BookDetailsRouteParams = {
 	book: BookProps
@@ -90,16 +84,10 @@ export const BookDetailsScreen = (
 
 	return (
 		<React.Fragment>
-			<View>
-				<Toolbar
-					title="BOOKREAD"
-					onBackPress={props.navigation.goBack}
-				/>
-			</View>
-			<Divider />
 			<Layout style={styles.mainContainer}>
 				<ScrollView>
 					<Layout style={styles.container}>
+						<BackButton onPress={props.navigation.goBack} />
 						<View style={styles.bookContainer}>
 							{image && (
 								<Image
@@ -130,9 +118,9 @@ export const BookDetailsScreen = (
 								style={styles.headerText}
 								category="label"
 								appearance="hint">
-								Description
+								Synopsis
 							</Text>
-							<Text>{book.description}</Text>
+							<Text category="p2">{book.description}</Text>
 						</View>
 						<View style={styles.infoContainer}>
 							<Text
