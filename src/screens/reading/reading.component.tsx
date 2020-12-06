@@ -10,7 +10,6 @@ import { AppRoute } from '../../navigation/app-routes'
 export const ReadingScreen = (props: ReadingScreenProps): LayoutElement => {
 	const [loading, setLoading] = React.useState(true)
 	const [books, setBooks] = React.useState<Book[]>([])
-	const [, setUpdate] = React.useState(false)
 
 	const findLastBooks = async () => {
 		const savedBooks = await Database.get(Book, (dbBooks) =>

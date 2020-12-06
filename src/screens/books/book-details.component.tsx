@@ -15,6 +15,7 @@ import { ReadingData } from '../../data/models/reading.model'
 import { generateModelId } from '../../data/models/default.model'
 import { ReadingDetailsLayout } from '../../components/reading/reading-details.component'
 import { AppRoute } from '../../navigation/app-routes'
+import { EditIcon } from '../../assets/icons'
 
 export type BookSavedDetailsRouteParams = {
 	bookKey: string
@@ -56,6 +57,7 @@ export const BookSavedDetailsScreen = (
 		)
 	}
 
+	// function to add 'reading' part in book
 	const startReading = async () => {
 		await Database.query(() => {
 			const reading: ReadingData = {
@@ -69,12 +71,20 @@ export const BookSavedDetailsScreen = (
 		setUpdate((previousUpdate) => !previousUpdate)
 	}
 
+	// navigation to new session page
 	const navigateSession = async () => {
 		props.navigation.navigate(AppRoute.BOOK_SESSION, {
 			bookTitle: book.title,
 			bookPages: book.pages,
 			bookCurrentPage: book.currentReading?.pages,
 			bookId: book.id,
+		})
+	}
+
+	// navigation to edition page
+	const navigateEdit = async () => {
+		props.navigation.navigate(AppRoute.BOOK_EDIT, {
+			bookKey: book.id,
 		})
 	}
 
@@ -101,6 +111,13 @@ export const BookSavedDetailsScreen = (
 							style={styles.subtitle}>
 							{Book.getSubtitle(book)}
 						</Text>
+						<Button
+							style={styles.editButton}
+							appearance="ghost"
+							status="basic"
+							accessoryLeft={EditIcon}
+							onPress={navigateEdit}
+						/>
 					</View>
 					<Layout style={styles.container}>
 						<View style={styles.infoContainer}>
@@ -191,6 +208,12 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flex: 1,
 		justifyContent: 'center',
+	},
+	editButton: {
+		position: 'absolute',
+		// backgroundColor: 'red',
+		bottom: 5,
+		right: 15,
 	},
 
 	image: {

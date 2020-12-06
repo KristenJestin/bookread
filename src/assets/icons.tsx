@@ -40,3 +40,11 @@ export const SavedIcon = (props: any): IconElement => (
 export const SavedCheckIcon = (props: any): IconElement => (
 	<Icon {...props} name="bookmark" />
 )
+
+export const EditIcon = (props: any): IconElement => (
+	<Icon {...props} name="edit-2-outline" />
+)
+
+export const DeleteIcon = (props: any): IconElement => (
+	<Icon {...props} name="trash-2" />
+)

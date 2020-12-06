@@ -14,11 +14,16 @@ import {
 	SessionScreen,
 	SessionRouteParams,
 } from '../screens/books'
+import {
+	BookEditRouteParams,
+	BookEditScreen,
+} from '../screens/books/book-edit.component'
 
 type BooksNavigatorParams = {
 	[AppRoute.BOOKS]: undefined
 	[AppRoute.BOOK_DETAILS]: BookSavedDetailsRouteParams
 	[AppRoute.BOOK_SESSION]: SessionRouteParams
+	[AppRoute.BOOK_EDIT]: BookEditRouteParams
 }
 
 export type BooksScreenProps = MaterialTopTabBarProps & {
@@ -33,6 +38,10 @@ export interface SessionScreenProps {
 	navigation: StackNavigationProp<BooksNavigatorParams, AppRoute.BOOK_SESSION>
 	route: RouteProp<BooksNavigatorParams, AppRoute.BOOK_SESSION>
 }
+export interface BookEditScreenProps {
+	navigation: StackNavigationProp<BooksNavigatorParams, AppRoute.BOOK_EDIT>
+	route: RouteProp<BooksNavigatorParams, AppRoute.BOOK_EDIT>
+}
 
 const Stack = createStackNavigator<BooksNavigatorParams>()
 
@@ -44,5 +53,6 @@ export const BooksNavigator = (): React.ReactElement => (
 			component={BookSavedDetailsScreen}
 		/>
 		<Stack.Screen name={AppRoute.BOOK_SESSION} component={SessionScreen} />
+		<Stack.Screen name={AppRoute.BOOK_EDIT} component={BookEditScreen} />
 	</Stack.Navigator>
 )
