@@ -1,138 +1,156 @@
 import React from 'react'
+import { StyleSheet, Image, View, ScrollView } from 'react-native'
 import {
-	StyleSheet,
-	Image,
-	View,
-	ScrollView,
-	Alert,
-	FlatList,
-} from 'react-native'
-import {
-	Divider,
 	Layout,
 	LayoutElement,
 	Spinner,
 	Text,
+	Button,
 } from '@ui-kitten/components'
-import Axios from 'axios'
-import { BookProps } from '../../data/book.helper'
-import { BooksDetailsScreenProps } from '../../navigation/books.navigator'
-import { Toolbar } from '../../components/toolbar.component'
-import { searchBooksFromAuthor } from '../../services/books.service'
-import { BookItemSmallLayout } from '../../components/book-item-small.component'
+import { BookSavedDetailsScreenProps } from '../../navigation/reading.navigator'
+import Book from '../../data/models/book.model'
+import Database from '../../config/database'
+import BackButton from '../../components/back-button.component'
+import { ReadingData } from '../../data/models/reading.model'
+import { generateModelId } from '../../data/models/default.model'
+import { ReadingDetailsLayout } from '../../components/reading/reading-details.component'
 import { AppRoute } from '../../navigation/app-routes'
+import { EditIcon } from '../../assets/icons'
 
-export type BookDetailsRouteParams = {
-	book: BookProps
+export type BookSavedDetailsRouteParams = {
+	bookKey: string
 }
 
-export const BookDetailsScreen = (
-	props: BooksDetailsScreenProps
+export const BookSavedDetailsScreen = (
+	props: BookSavedDetailsScreenProps
 ): LayoutElement => {
-	const { book } = props.route.params
-	const [sameAuthorBooks, setSameAuthorBooks] = React.useState<BookProps[]>(
-		[]
-	)
-	const [loading, setLoading] = React.useState(false)
+	const { bookKey } = props.route.params
+	const [book, setBook] = React.useState<Book>()
+	const [, setUpdate] = React.useState(false)
 
-	// make request to get books from author
-	React.useEffect(() => {
-		const source = Axios.CancelToken.source()
+	// find book from sended key
+	React.useMemo(() => {
 		;(async () => {
-			try {
-				if (!book.authors || !book.authors.length) return
-				if (!loading) setLoading(true)
-
-				const books = await searchBooksFromAuthor(
-					book.authors[0],
-					source
-				)
-				setSameAuthorBooks(
-					books
-						.filter(
-							(sameBookAuthor) =>
-								sameBookAuthor.id !== book.id &&
-								sameBookAuthor.images &&
-								sameBookAuthor.images.length
-						)
-						.sort(
-							(a, b) =>
-								new Date(b.publishedDate).getTime() -
-								new Date(a.publishedDate).getTime()
-						)
-				)
-				setLoading(false)
-			} catch (error) {
-				Alert.alert(
-					'Erreur',
-					`Une erreur est survenue lors de la récupération des livres ${error}`
-				)
-			}
+			setBook(await Database.find(Book, bookKey))
 		})()
+	}, [bookKey])
 
-		return () => {
-			source.cancel()
+	// event on navigation go back here
+	React.useEffect(() => {
+		const updateAction = () => {
+			setUpdate((upd) => !upd)
+			return true
 		}
-	}, [book]) // eslint-disable-line react-hooks/exhaustive-deps
+		props.navigation.addListener('focus', updateAction)
 
-	// navigate when click
-	const navigateBookDetails = (bookIndex: number): void => {
-		const { [bookIndex]: nextBook } = sameAuthorBooks
-		props.navigation.navigate(AppRoute.BOOK_DETAILS, { book: nextBook })
+		return () => props.navigation.removeListener('focus', updateAction)
+	}, [props.navigation])
+
+	if (!book) {
+		return (
+			<React.Fragment>
+				<Layout style={styles.loadingContainer}>
+					<BackButton onPress={props.navigation.goBack} />
+					<Spinner />
+				</Layout>
+			</React.Fragment>
+		)
 	}
 
-	// get image
-	const image =
-		book.images && book.images.length
-			? book.images.find((img) => img.type === 'thumbnail') ||
-			  book.images[0]
-			: null
+	// function to add 'reading' part in book
+	const startReading = async () => {
+		await Database.query(() => {
+			const reading: ReadingData = {
+				id: generateModelId(),
+				sessions: [],
+				pages: 0,
+			}
+			book.currentReading = reading
+			book.updatedAt = new Date()
+		})
+		setUpdate((previousUpdate) => !previousUpdate)
+	}
+
+	// navigation to new session page
+	const navigateSession = async () => {
+		props.navigation.navigate(AppRoute.BOOK_SESSION, {
+			bookTitle: book.title,
+			bookPages: book.pages,
+			bookCurrentPage: book.currentReading?.pages,
+			bookId: book.id,
+		})
+	}
+
+	// navigation to edition page
+	const navigateEdit = async () => {
+		props.navigation.navigate(AppRoute.BOOK_EDIT, {
+			bookKey: book.id,
+		})
+	}
 
 	return (
 		<React.Fragment>
-			<View>
-				<Toolbar
-					title="BOOKREAD"
-					onBackPress={props.navigation.goBack}
-				/>
-			</View>
-			<Divider />
 			<Layout style={styles.mainContainer}>
 				<ScrollView>
+					<View style={styles.coverContainer}>
+						{book.image && (
+							<Image
+								style={styles.coverImage}
+								source={{
+									uri: book.image,
+								}}
+							/>
+						)}
+						<BackButton onPress={props.navigation.goBack} />
+						<Text category="p1" style={styles.title}>
+							{book.title}
+						</Text>
+						<Text
+							category="s2"
+							appearance="hint"
+							style={styles.subtitle}>
+							{Book.getSubtitle(book)}
+						</Text>
+						<Button
+							style={styles.editButton}
+							appearance="ghost"
+							status="basic"
+							accessoryLeft={EditIcon}
+							onPress={navigateEdit}
+						/>
+					</View>
 					<Layout style={styles.container}>
-						<View style={styles.bookContainer}>
-							{image && (
-								<Image
-									style={styles.image}
-									source={{
-										uri: image.link,
-									}}
-								/>
-							)}
-							<Text category="h4" style={styles.title}>
-								{book.title}
+						<View style={styles.infoContainer}>
+							<Text
+								style={styles.headerText}
+								category="label"
+								appearance="hint">
+								Lecture
 							</Text>
-							{book.authors && book.authors.length && (
-								<Text
-									category="p2"
-									appearance="hint"
-									style={styles.subtitle}>
-									par {book.authors.join(', ')}
-									{book.publishedDate &&
-										` • ${new Date(
-											book.publishedDate
-										).getFullYear()}`}
-								</Text>
-							)}
+							<View style={styles.readingContainer}>
+								{book.currentReading ? (
+									<ReadingDetailsLayout
+										reading={book.currentReading}
+										pages={book.pages}
+										onPressSession={navigateSession}
+									/>
+								) : (
+									<Button
+										status="success"
+										onPress={startReading}>
+										COMMENCER À LIRE
+									</Button>
+								)}
+							</View>
 						</View>
 						<View style={styles.infoContainer}>
 							<Text
 								style={styles.headerText}
 								category="label"
 								appearance="hint">
-								Description
+								Synopsis
 							</Text>
-							<Text>{book.description}</Text>
+							<Text category="p2">{book.description}</Text>
 						</View>
 						<View style={styles.infoContainer}>
 							<Text
@@ -141,34 +159,10 @@ export const BookDetailsScreen = (
 								appearance="hint">
 								Catégories
 							</Text>
-							<Text>{book.categories.join(', ')}</Text>
-						</View>
-						<View style={styles.infoContainer}>
-							<Text
-								style={styles.headerText}
-								category="label"
-								appearance="hint">
-								Livres de l'auteur
-							</Text>
-							{loading ? (
-								<View style={styles.loadingContainer}>
-									<Spinner />
-								</View>
-							) : (
-								<FlatList
-									horizontal
-									style={styles.list}
-									data={sameAuthorBooks}
-									keyExtractor={(item) => item.id}
-									renderItem={({ item, index }) => (
-										<BookItemSmallLayout
-											book={item}
-											navigate={() =>
-												navigateBookDetails(index)
-											}
-										/>
-									)}
-								/>
+							{book.categories && (
+								<Text category="p2">
+									{book.categories.join(', ')}
+								</Text>
 							)}
 						</View>
 					</Layout>
@@ -179,10 +173,29 @@ export const BookDetailsScreen = (
 }
 
 const styles = StyleSheet.create({
-	mainContainer: { flex: 1 },
+	mainContainer: {
+		flex: 1,
+	},
+	coverContainer: {
+		width: '100%',
+		height: 200,
+		justifyContent: 'center',
+	},
+	coverImage: {
+		height: '100%',
+		width: '100%',
+		resizeMode: 'cover',
+		opacity: 0.12,
+		position: 'absolute',
+	},
+
 	container: {
 		flex: 1,
-		padding: 20,
+		paddingVertical: 10,
+	},
+
+	readingContainer: {
+		marginTop: 10,
 	},
 
 	bookContainer: {
@@ -193,7 +206,14 @@ const styles = StyleSheet.create({
 
 	loadingContainer: {
 		alignItems: 'center',
-		marginTop: 20,
+		flex: 1,
+		justifyContent: 'center',
+	},
+	editButton: {
+		position: 'absolute',
+		// backgroundColor: 'red',
+		bottom: 5,
+		right: 15,
 	},
 
 	image: {
@@ -205,7 +225,7 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		marginTop: 15,
-		fontWeight: 'bold',
+		fontSize: 28,
 		textAlign: 'center',
 	},
 	subtitle: {
@@ -214,10 +234,11 @@ const styles = StyleSheet.create({
 
 	infoContainer: {
 		marginBottom: 25,
+		paddingHorizontal: 20,
+		paddingVertical: 10,
 	},
 	headerText: {
 		textTransform: 'uppercase',
-		fontWeight: 'bold',
 	},
 
 	list: {

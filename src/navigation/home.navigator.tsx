@@ -5,14 +5,16 @@ import {
 	createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import { HomeTabBar } from '../screens/home'
-import { ReadingScreen } from '../screens/reading'
-import { BooksNavigator } from './books.navigator'
+import { BooksNavigator } from './books-list.navigator'
+import { ReadingNavigator } from './reading.navigator'
+import { SearchNavigator } from './search.navigator'
 import { AppRoute } from './app-routes'
-import { ReadingIcon, BooksIcon } from '../assets/icons'
+import { ReadingIcon, BooksIcon, SearchIcon } from '../assets/icons'
 
 type HomeBottomTabsNavigatorParams = {
 	[AppRoute.READING]: undefined
 	[AppRoute.BOOKS]: undefined
+	[AppRoute.SEARCH]: undefined
 }
 
 export type ReadingTabNavigationProp = BottomTabNavigationProp<
@@ -25,6 +27,11 @@ export type BooksTabNavigationProp = BottomTabNavigationProp<
 	AppRoute.BOOKS
 >
 
+export type SearchTabNavigationProp = BottomTabNavigationProp<
+	HomeBottomTabsNavigatorParams,
+	AppRoute.SEARCH
+>
+
 export type BottomHomeScreenProps = BottomTabBarProps & {
 	navigation: ReadingTabNavigationProp
 }
@@ -35,13 +42,18 @@ export const HomeNavigator = (): React.ReactElement => (
 	<BottomTab.Navigator tabBar={HomeTabBar}>
 		<BottomTab.Screen
 			name={AppRoute.READING}
-			component={ReadingScreen}
+			component={ReadingNavigator}
 			options={{ title: 'LECTURES', tabBarIcon: ReadingIcon }}
 		/>
 		<BottomTab.Screen
 			name={AppRoute.BOOKS}
 			component={BooksNavigator}
 			options={{ title: 'LIVRES', tabBarIcon: BooksIcon }}
+		/>
+		<BottomTab.Screen
+			name={AppRoute.SEARCH}
+			component={SearchNavigator}
+			options={{ title: 'RECHERCHE', tabBarIcon: SearchIcon }}
 		/>
 	</BottomTab.Navigator>
 )

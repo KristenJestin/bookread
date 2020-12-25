@@ -5,28 +5,35 @@
 		"name": "KristenJestin"
 	},
 	"scripts": {
-		"android": "react-native run-android",
+		"android": "npx react-native run-android",
 		"ios": "react-native run-ios",
 		"start": "react-native start",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-		"format": "prettier --write \"**/*.{js,ts,jsx,tsx}\""
+		"format": "prettier --write \"**/*.{js,ts,jsx,tsx}\"",
+		"extract:database": "sh ./scripts/extract-realm-database-android.sh"
 	},
 	"dependencies": {
 		"@eva-design/eva": "2.0.0",
+		"@hookform/strictly-typed": "^0.0.4",
 		"@react-native-community/masked-view": "^0.1.10",
 		"@react-navigation/bottom-tabs": "^5.11.2",
 		"@react-navigation/material-top-tabs": "^5.3.10",
 		"@react-navigation/native": "^5.8.10",
 		"@react-navigation/stack": "^5.12.8",
+		"@types/uuid": "^8.3.0",
 		"@ui-kitten/components": "5.0.0",
 		"@ui-kitten/eva-icons": "5.0.0",
 		"axios": "^0.21.0",
 		"react": "16.13.1",
+		"react-hook-form": "^6.12.1",
 		"react-native": "0.63.3",
 		"react-native-gesture-handler": "^1.8.0",
+		"react-native-get-random-values": "^1.5.0",
 		"react-native-safe-area-context": "^3.1.9",
 		"react-native-screens": "^2.15.0",
-		"react-native-svg": "^12.1.0"
+		"react-native-svg": "^12.1.0",
+		"realm": "^10.0.1",
+		"uuid": "^8.3.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.8.4",

@@ -6,9 +6,12 @@ import {
 } from '@react-navigation/stack'
 import { BooksTabNavigationProp } from './home.navigator'
 import { AppRoute } from './app-routes'
-import { BookDetailsRouteParams, BookDetailsScreen } from '../screens/books'
+import {
+	BooksScreen,
+	BookDetailsRouteParams,
+	BookDetailsScreen,
+} from '../screens/search'
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs'
-import { BooksScreen } from '../screens/books'
 
 type BooksNavigatorParams = {
 	[AppRoute.BOOKS]: undefined
@@ -26,7 +29,7 @@ export interface BooksDetailsScreenProps {
 
 const Stack = createStackNavigator<BooksNavigatorParams>()
 
-export const BooksNavigator = (): React.ReactElement => (
+export const SearchNavigator = (): React.ReactElement => (
 	<Stack.Navigator headerMode="none">
 		<Stack.Screen name={AppRoute.BOOKS} component={BooksScreen} />
 		<Stack.Screen
