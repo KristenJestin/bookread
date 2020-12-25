@@ -1,0 +1,39 @@
+name: Build apk
+on:
+    push:
+        branches:
+            - master
+            - develop
+jobs:
+    install:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Install npm dependencies
+              run: |
+                  npm install
+    build-android:
+        needs: install
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Install npm dependencies
+              run: |
+                  npm install
+            - name: Make envfile
+              run: |
+                  touch .env
+                  echo BOOK_API_URL=\"https://www.googleapis.com/books/v1\" >> .env
+                  echo BOOK_API_KEY=${{ secrets.BOOK_API_KEY }} >> .env
+                  cat .env
+            - name: Gradlew permissions
+              run: |
+                  cd android && chmod +x ./gradlew
+            - name: Build Android Release
+              run: |
+                  cd android && ./gradlew assembleRelease -x bundleReleaseJsAndAssets
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v1
+              with:
+                  name: app-release.apk
+                  path: android/app/build/outputs/apk/release/

@@ -1,0 +1,96 @@
+{
+	"strict": {
+		"text-font-family": "TitilliumWeb-Regular",
+
+		"text-heading-1-font-family": "Montserrat-Bold",
+		"text-heading-2-font-family": "Montserrat-Bold",
+		"text-heading-3-font-family": "Montserrat-Bold",
+		"text-heading-4-font-family": "Montserrat-Bold",
+		"text-heading-5-font-family": "Montserrat-Bold",
+		"text-heading-6-font-family": "Montserrat-Bold",
+
+		"text-paragraph-1-font-family": "TitilliumWeb-Bold",
+		"text-subtitle-1-font-family": "TitilliumWeb-Bold",
+		"text-caption-1-font-family": "TitilliumWeb-Bold",
+		"text-label-font-family": "TitilliumWeb-Bold",
+
+		"text-paragraph-1-font-size": 15,
+		"text-paragraph-2-font-size": 15,
+		"text-subtitle-1-font-size": 14,
+		"text-subtitle-2-font-size": 14,
+		"text-caption-1-font-size": 13,
+		"text-caption-2-font-size": 13,
+		"text-label-font-size": 13
+	},
+	"components": {
+		"StatusBar": {
+			"meta": {
+				"scope": "mobile",
+				"parameters": {
+					"barStyle": {
+						"type": "string"
+					},
+					"backgroundColor": {
+						"type": "string"
+					}
+				},
+				"appearances": {
+					"default": {
+						"default": true
+					}
+				},
+				"variantGroups": {},
+				"states": {}
+			},
+			"appearances": {
+				"default": {
+					"mapping": {
+						"barStyle": "dark-content",
+						"backgroundColor": "background-basic-color-2"
+					}
+				}
+			}
+		},
+		"SafeAreaLayout": {
+			"meta": {
+				"scope": "mobile",
+				"parameters": {
+					"backgroundColor": {
+						"type": "string"
+					}
+				},
+				"appearances": {
+					"default": {
+						"default": true
+					}
+				},
+				"variantGroups": {
+					"insets": {
+						"top": {
+							"default": false
+						},
+						"bottom": {
+							"default": false
+						}
+					}
+				},
+				"states": {}
+			},
+			"appearances": {
+				"default": {
+					"mapping": {},
+					"variantGroups": {
+						"position": {
+							"top": {
+								"backgroundColor": "background-basic-color-2"
+							},
+							"bottom": {
+								"backgroundColor": "background-basic-color-1"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
